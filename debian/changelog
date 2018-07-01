@@ -1,134 +1,103 @@
-instead (3.2.1) unstable; urgency=low
-  * 3.2.1 release;
+instead (3.2.1-1) unstable; urgency=low
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 22 Apr 2018 13:34:00 +0300
+  * New upstream release (Closes: #896061).
+  * Remove doc packages (until English translation of new doc is out).
+  * debian/compat:
+    - Update debhelper version (from 9 to 11).
+  * debian/control:
+    - Bump Standards-Version up to 4.1.4.
+    - Increase debhelper version up to 11.
+    - Replace liblua5.1-dev with liblua5.1-0-dev.
+    - Update links for "Homepage" and "Game repository".
+    - Remove doc packages (see above).
+    - Remove "Suggests: instead-doc-*" (see above).
+  * debian/copyright:
+    - Remove the entry for doc/examples/sfxr.lua file as it was removed
+      upstream.
+    - Update copyright dates (from 2017 to 2018).
+    - Update licenses links (use https instead of http).
+  * debian/patches:
+    - Remove fix-hurd-build patch (fixed upstream).
+  * debian/rules:
+    - Remove "--parallel" parameter.
 
-instead (3.2.0) unstable; urgency=low
-  * 3.2.0 release;
+ -- Sam Protsenko <joe.skb7@gmail.com>  Sun, 01 Jul 2018 20:02:00 +0300
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Fri, 9 Feb 2018 21:07:00 +0300
+instead (3.1.2-2) unstable; urgency=low
 
-instead (3.1.2) unstable; urgency=low
-  * 3.1.2 release;
+  * Remove menu entry.
+  * Add instead-doc-base to Conflicts and Replaces sections of
+    instead-doc-common.
+  * Fix build on Hurd systems (Closes: #873542).
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Mon, 21 Aug 2017 16:45:00 +0300
+ -- Sam Protsenko <joe.skb7@gmail.com>  Tue, 29 Aug 2017 00:39:00 +0300
 
-instead (3.1.1) unstable; urgency=low
-  * 3.1.1 release;
+instead (3.1.2-1) unstable; urgency=low
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Mon, 21 Aug 2017 08:50:00 +0300
+  * New upstream release (Closes: #867540).
+  * Fixed fonts dependencies (Closes: #861047).
+  * Rename instead-doc-base -> instead-doc-common.
+  * Use SDL2 instead of SDL1.
+  * debian/control:
+    - Bump Standards-Version up to 4.0.0.
+    - Increase debhelper version up to 9.
+  * debian/rules:
+    - Move to CMake.
+    - Simplify rules script.
+  * debian/copyright:
+    - Change copyrights w.r.t. to new INSTEAD version.
 
-instead (3.1.0) unstable; urgency=low
-  * 3.1.0 release;
+ -- Sam Protsenko <joe.skb7@gmail.com>  Mon, 21 Aug 2017 13:21:00 +0300
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 20 Aug 2017 10:16:00 +0300
+instead (1.9.1-1) unstable; urgency=low
 
-instead (3.0.1) unstable; urgency=low
-  * 3.0.1 release;
+  * New upstream release.
+  * New tutorial soundtrack from svenzzon, so old one is gone
+    and now package is not "-dfsg".
+  * Fix build on sid on amd64 (Closes: #713680).
+  * debian/control:
+    - Bumped up Standards-Version to 3.9.4.
+  * debian/watch:
+    - Update link to current INSTEAD repository.
+  * debian/copyright:
+    - Update INSTEAD site link.
+    - Update copyright for tutorial music.
+  * debian/control:
+    - Update INSTEAD site link.
+    - Update game repository link.
+  * patches/:
+    - Fix Lintian warnings:
+      - "desktop-entry-contains-encoding-key"
+      - "desktop-entry-lacks-keywords-entry"
+    - Fix "desktop-file-validate" tool warnings:
+      - "Icon" must not contain file extension
+      - "Version" entry must be desktop-file standard version,
+        not the application version
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Wed, 24 May 2017 21:03:00 +0300
+ -- Sam Protsenko <joe.skb7@gmail.com>  Thu, 26 Sep 2013 23:50:00 +0300
 
-instead (3.0.0) unstable; urgency=low
-  * 3.0.0 release;
+instead (1.8.3+dfsg1-1) unstable; urgency=low
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Wed, 19 Apr 2017 17:45:00 +0300
+  * New upstream release (Closes: #664587).
+    + Non-free games/tutorial3/sv_ttt.xm from upstream replaced with free one
+      track.
+  * Removed linking patch as it's not necessary (fixed upstream).
+  * Added missed copyright for themes/default/sans*.ttf.
+  * Added patch fixes desktop entry.
+  * themes/default/sans*.ttf fonts replaced with system ones.
+  * Added doc-packages.
+  * Threaded make.
 
-instead (2.4.1) unstable; urgency=low
-  * 2.4.1 release;
+ -- Sam Protsenko <joe.skb7@gmail.com>  Sat, 09 Mar 2013 22:40:00 +0200
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Sat, 16 Apr 2016 13:50:00 +0300
+instead (1.6.1-1) unstable; urgency=low
 
-instead (2.4.0) unstable; urgency=low
-  * 2.4.0 release;
+  * Fixed build for Hurd.
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Thu, 18 Feb 2016 15:09:00 +0300
+ -- Sam Protsenko <joe.skb7@gmail.com>  Thu, 19 Jan 2012 15:09:11 +0200
 
-instead (2.3.0) unstable; urgency=low
-  * 2.3.0 release;
+instead (1.6.0-1) unstable; urgency=low
 
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 18 Oct 2015 13:15:00 +0300
+  * Initial release (Closes: #641307).
 
-instead (2.2.7) unstable; urgency=low
-  * 2.2.7 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 20 Sep 2015 13:49:00 +0300
-
-instead (2.2.6) unstable; urgency=low
-  * 2.2.6 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 20 Sep 2015 13:22:00 +0300
-
-instead (2.2.5) unstable; urgency=low
-  * 2.2.5 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 30 Aug 2015 16:15:00 +0300
-
-instead (2.2.4) unstable; urgency=low
-  * 2.2.4 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 2 Aug 2015 11:22:00 +0300
-
-instead (2.2.3) unstable; urgency=low
-  * 2.2.3 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Fri, 20 Mar 2015 18:56:00 +0300
-
-instead (2.2.2) unstable; urgency=low
-  * 2.2.2 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Fri, 6 Feb 2015 19:17:00 +0300
-
-instead (2.2.1) unstable; urgency=low
-  * 2.2.1 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sat, 31 Jan 2015 16:27:00 +0300
-
-instead (2.2.0) unstable; urgency=low
-  * 2.2.0 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Thu, 1 Jan 2015 10:52:00 +0300
-
-instead (2.1.1) unstable; urgency=low
-  * 2.1.1 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Wed, 9 Jul 2014 13:30:00 +0400
-
-instead (2.1.0) unstable; urgency=low
-  * 2.1.0 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Tue, 3 Jun 2014 17:28:00 +0400
-
-instead (2.0.3) unstable; urgency=low
-  * 2.0.3 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Thu, 20 Feb 2014 17:20:00 +0400
-
-instead (2.0.2) unstable; urgency=low
-  * 2.0.2 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Thu, 30 Jan 2014 08:30:00 +0400
-
-instead (2.0.1) unstable; urgency=low
-  * 2.0.1 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Mon, 27 Jan 2014 19:40:00 +0400
-
-instead (2.0.0) unstable; urgency=low
-  * 2.0.0 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sun, 26 Jan 2014 13:12:00 +0400
-
-instead (1.9.1) unstable; urgency=low
-  * 1.9.1 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sat, 13 Jul 2013 14:30:00 +0400
-
-instead (1.9.0) unstable; urgency=low
-  * 1.9.0 release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Fri, 12 Apr 2013 08:00:00 +0400
-
-instead (1.8.3) unstable; urgency=low
-  * debian friendly release;
-
- -- Peter Kosyh <p.kosyh@gmail.com>  Sat, 26 Jan 2013 14:52:00 +0400
+ -- Sam Protsenko <joe.skb7@gmail.com>  Sun, 15 Jan 2012 17:02:02 +0200

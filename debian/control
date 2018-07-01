@@ -1,14 +1,43 @@
 Source: instead
 Section: games
 Priority: optional
-Maintainer: Peter Kosyh <p.kosyh@gmail.com>
-Build-Depends: debhelper (>= 7), pkg-config, liblua5.1-dev, libsdl2-dev, libsdl2-ttf-dev, libsdl2-image-dev, libsdl2-mixer-dev, zlib1g-dev
-Standards-Version: 3.8.3
-Homepage: http://instead.sourceforge.net
+Maintainer: Sam Protsenko <joe.skb7@gmail.com>
+Build-Depends: debhelper (>= 11), dpkg-dev (>= 1.16.1~), pkg-config,
+ cmake (>= 2.6.0), liblua5.1-0-dev, zlib1g-dev, libgtk2.0-dev,
+ libsdl2-dev, libsdl2-mixer-dev, libsdl2-image-dev, libsdl2-ttf-dev
+Standards-Version: 4.1.4
+Homepage: https://instead-hub.github.io/
 
 Package: instead
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: simple text adventures/visual novels engine
- Visual novell/text quest-like engine.
+Depends: ${shlibs:Depends}, ${misc:Depends}, instead-data (= ${source:Version})
+Description: Simple text adventures/visual novels engine
+ INSTEAD -- INterpreter of Simple TExt ADventure.
+ Using INSTEAD you can create and play games that could be classified
+ as a mix of visual novel and text quest.
+ .
+ Features:
+   * Simple story source code (Lua-based script)
+   * GUI interface that supports music and pictures
+   * Theme support
+   * Portability (INSTEAD depends on SDL and Lua)
+ .
+ Game repository: https://instead-hub.github.io/page/games/
 
+Package: instead-data
+Architecture: all
+Depends: ${misc:Depends}, fonts-liberation
+Recommends: instead
+Description: Data files for INSTEAD
+ INSTEAD -- INterpreter of Simple TExt ADventure.
+ Using INSTEAD you can create and play games that could be classified
+ as a mix of visual novel and text quest.
+ .
+ Features:
+   * Simple story source code (Lua-based script)
+   * GUI interface that supports music and pictures
+   * Theme support
+   * Portability (INSTEAD depends on SDL and Lua)
+ .
+ This package contains language files, graphical themes, STEAD scripts
+ and tutorial.
