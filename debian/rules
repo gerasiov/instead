@@ -14,7 +14,7 @@ BINDIR = games
 # Put data into /usr/share/games/instead rather than /usr/share/instead
 DATADIR = share/games/instead
 # Configure CMake build
-CMAKE_FLAGS = -DWITH_SDL2=1
+CMAKE_FLAGS = -DWITH_SDL2=1 -DWITH_GTK3=1 -DWITH_GTK2=0
 # Override some variables in CMakeLists.txt
 CMAKE_CACHE_FLAGS = -DBINDIR=$(BINDIR) -DDATADIR=$(DATADIR)
 

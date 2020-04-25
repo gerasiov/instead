@@ -1,3 +1,31 @@
+instead (3.3.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Fix build error on sid/amd64 in SDL_anigif.c (Closes: #713680).
+  * Bring back doc packages (English translation is ok now).
+  * debian/compat:
+    - Increase debhelper version up to 12.
+  * debian/control:
+    - Bump Standards-Version up to 4.4.1.
+    - Add "Rules-Requires-Root: no" field.
+  * debian/copyright:
+    - Update dates.
+    - Add missing authors to src/SDL_anigif.* files.
+    - Fix license (change from LGPL-2.1 to correct Zlib) for files:
+      src/SDL_gfxBlitFunc.*, src/SDL_rotozoom.*, src/SDL2_rotozoom.*.
+  * debian/not-installed:
+    - Add not-installed file to skip instead.txt installation.
+  * debian/upstream/metadata:
+    - Add metadata file to provide upstream info for UMEGAYA.
+
+ -- Sam Protsenko <joe.skb7@gmail.com>  Sat, 25 Apr 2020 21:15:00 +0300
+
+instead (3.2.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Sam Protsenko <joe.skb7@gmail.com>  Sat, 03 Nov 2018 17:18:00 +0200
+
 instead (3.2.1-1) unstable; urgency=low
 
   * New upstream release (Closes: #896061).

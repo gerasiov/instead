@@ -44,9 +44,9 @@ fi
 
 
 
-echo -n "Checking pkg-config --cflags lua[5.1|5.2|51|52|jit]..."
+echo -n "Checking pkg-config --cflags lua[jit|5.1|5.2|51|52]..."
 if [ "x$LUA" = "x" ]; then
-	lua_ver="lua5.1 lua5.2 lua lua-5.1 lua-5.2 lua51 lua52 luajit"
+	lua_ver="luajit lua5.1 lua5.2 lua lua-5.1 lua-5.2 lua51 lua52"
 else
 	lua_ver=$LUA
 fi
@@ -182,8 +182,8 @@ if [ ! -z "$gtk_cflags" ]; then
 fi
 if [ -z "$zlib_cflags" ]; then
 	echo "SUBDIRS=src/zlib" >> config.make
-	echo "ZLIB_CFLAGS=-I../zlib" >> config.make
-	echo "ZLIB_LFLAGS=../zlib/libz.a" >> config.make
+	echo "ZLIB_CFLAGS=-Izlib" >> config.make
+	echo "ZLIB_LFLAGS=zlib/libz.a" >> config.make
 elif [ "$zlib_cflags" = "x" ]; then
 	echo "ZLIB_CFLAGS=" >> config.make
 	echo "ZLIB_LFLAGS=-lz" >> config.make

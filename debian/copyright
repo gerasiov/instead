@@ -4,11 +4,11 @@ Upstream-Contact: Peter Kosyh <p.kosyh@gmail.com>
 Source: https://github.com/instead-hub/instead/
 
 Files: *
-Copyright: 2009-2018, Peter Kosyh <p.kosyh@gmail.com>
+Copyright: 2009-2020, Peter Kosyh <p.kosyh@gmail.com>
 License: Expat
 
 Files: debian/*
-Copyright: 2011-2018, Sam Protsenko <joe.skb7@gmail.com>
+Copyright: 2011-2020, Sam Protsenko <joe.skb7@gmail.com>
 License: GPL-2
 
 Files: doc/examples/webinst.lua
@@ -65,13 +65,15 @@ License: public-domain-noise1234
  See https://github.com/stegu/perlin-noise/blob/master/src/noise1234.c
 
 Files: src/SDL_anigif.*
-Copyright: 1997-2006, Sam Lantinga
+Copyright: 1990, 1991, 1993, David Koblas
+           1996, Torsten Martinsen
+           1997-2006, Sam Lantinga
            2006, Doug McFadyen
 License: LGPL-2.1
 
 Files: src/SDL_gfxBlitFunc.* src/SDL_rotozoom.* src/SDL2_rotozoom.*
 Copyright: A. Schiffler
-License: LGPL-2.1
+License: Zlib
 
 Files: src/unpack.c src/unzip.*
 Copyright: 1998-2010, Gilles Vollant
