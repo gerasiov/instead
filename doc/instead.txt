@@ -1,0 +1,184 @@
+INSTEAD(6)							 GAMES							    INSTEAD(6)
+
+NAME
+       INSTEAD - Simple Text Adventure Engine, The Interpreter
+
+DESCRIPTION
+       The  interpreter  of  STEAD  (Simple  Text Adventures) allows one to play games that combine visual novels, text adventures and
+       classic quests of 1990-s.  The STEAD games features are:
+
+	* very simple source code of the stories. (based on LUA);
+
+	* graphical game interface;
+
+	* supports music and images;
+
+	* theme support - a game may change the interface look;
+
+	* portability (originally written for Linux, depends on SDL and lua).
+
+SYNOPSIS
+       sdl-instead [options] [game.zip or game.idf or path to game]
+
+OPTIONS
+       -debug Debug mode (for game developers).
+
+       -nosound
+	      Run the game without sound.
+
+       -vsync Vsync output. (SDL2 only)
+
+       -gamespath <path>
+	      Add path with games.
+
+       -themespath <path>
+	      Add path with themes.
+
+       -nostdgames
+	      Do not use default games.
+
+       -nostdthemes
+	      Do not use default themes.
+
+       -game <basename>
+	      Select game in gamespath.
+
+       -theme <basename>
+	      Select theme in themespath.
+
+       -owntheme
+	      Force game to use own theme.
+
+       -fullscreen
+	      Run the game in fullscreen mode.
+
+       -nocursor
+	      Do not use game mouse cursors (use system one)
+
+       -hires / -nohires
+	      Set/unset the high resolution when run in fullscreen mode.
+
+       -window
+	      Run the game in windowed mode.
+
+       -resizable
+	      Resizable window (SDL2 only)
+
+       -scale <scale>
+	      Scale window (SDL2 only)
+
+       -noautosave
+	      Disable autosave load.
+
+       -encode <lua file> [encoded file]
+	      Encode lua file. Encoded file can be executed with doencfile("encoded file").
+
+       -idf <path to resources directory or game>
+	      Build idf file [INSTEAD data file] from directory.
+
+       -mode [WxH]
+	      Use WxH resolution.
+
+       -modes <WxH>[,<WxH>[,<WxH>]] ...
+	      Define available resolutions.
+
+       -software
+	      Force software rendering
+
+       -renderer <opengl|direct3d|software|...>
+	      Select default renderer (SDL2 only)
+
+       -fontscale <percents>
+	      Font scaling.
+
+       -nopause
+	      Do not pause the game on window minimize.
+
+       -hinting 0|1|2|3
+	      Set the font hinting mode (helpful with infinality).
+
+       -install [game in zip]
+	      Install game from zip archive
+
+       -quit  Quit :)
+
+       -appdata [fullpath]
+	      Store saves and settings in appdata path. Path must exist!
+
+       -chunksize [size in bytes]
+	      Size for audio buffer. Try this if sound lags.
+
+       -version
+	      Show version and exit.
+
+       -lua <script.lua> [arguments]
+	      Exec lua script (for game developers).
+
+       -luac <script.lua>
+	      Check lua script (for game developers).
+
+       -standalone
+	      Run game in standalone mode (no sandbox, no games selection ...).
+
+       -noconfig
+	      Do not load saved config (run with defaults).
+
+       -profile <profile>
+	      Using configuration profile. Profile file is the ini-styled file with parameter = value pairs. Where is  parameters  are
+	      arguments without -.
+
+       Configuration file name is 'insteadrc' and it's located in ~/.instead/.
+
+       Games can be downloaded from http://instead-games.sf.net. Unzip them in ~/.instead/games.
+
+CONTROLS
+       Please, see tutorial.
+
+LICENCE
+       This software is covered by the terms of the MIT license.
+
+WARRANTY
+       None.
+
+COPYRIGHT AND CREDITS
+       Peter Kosyh
+	      INSTEAD author.
+
+       Ilya Ryndin
+	      Initial port to Windows.
+
+       Mahno Aleksey, Anton Kolosov
+	      Port to Android.
+
+       .dm    Port to Mac OS X.
+
+       Andrey Afletdinov
+	      Port to Windows CE.
+
+       Vadim Balashoff
+	      Advices.
+
+       Vladimir Zhirov
+	      Advices.
+
+       Alexander Yakovlev
+	      manual.tex support.
+
+       Serj Kalichev
+	      Advices and default theme correction.
+
+       Vladimir Podobaev, Oleg Gvozdev
+	      Testers.
+
+       Alexander Soborov
+	      Wiki support.
+
+       Andrew Lobanov
+	      Games repository, slackbuild.
+
+       Many others for comments, bug reports, games and ideas.
+
+SEE ALSO
+       https://instead-hub.github.io
+
+Instead 						     Version 3.2.1						    INSTEAD(6)
