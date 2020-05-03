@@ -962,6 +962,10 @@ int game_theme_init(void)
 			rotate_portrait();
 		else
 			unlock_rotation();
+#if defined(ANDROID)
+		usleep(100000);
+		gfx_get_max_mode(&w, &h, MODE_ANY);
+#endif
 #endif
 	}
 #if defined(ANDROID) || defined(IOS) || defined(WINRT) || defined(_USE_SWROTATE)

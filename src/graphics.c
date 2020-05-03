@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2018 Peter Kosyh <p.kosyh at gmail.com>
+ * Copyright 2009-2019 Peter Kosyh <p.kosyh at gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation files
@@ -423,7 +423,8 @@ static void anigif_frame(anigif_t g)
 		SDL_SetClipRect(Surf(screen), &g->spawn[i].clip);
 		SDL_BlitSurface(frame->surface, NULL, Surf(screen), &dest);
 	}
-	g->delay = timer_counter;
+	if (!g->active) /* initial draw */
+		g->delay = timer_counter;
 	SDL_SetClipRect(Surf(screen), &clip);
 }
 
@@ -1413,9 +1414,9 @@ void gfx_draw(img_t p, int x, int y)
 		anigif_spawn(ag, x, y, dest.w, dest.h);
 		if (!ag->drawn)
 			anigif_drawn_nr ++;
+		anigif_frame(ag);
 		ag->drawn = 1;
 		ag->active = 1;
-		anigif_frame(ag);
 		return;
 	}
 	SDL_BlitSurface(pixbuf, NULL, Surf(screen), &dest);
@@ -1786,6 +1787,11 @@ static int current_gfx_w = - 1;
 static int current_gfx_h = - 1;
 #endif
 #endif
+
+#if defined(ANDROID)
+extern void get_screen_size(int *w, int *h);
+#endif
+
 int gfx_get_max_mode(int *w, int *h, int o)
 {
 	int ww = 0, hh = 0;
@@ -1794,11 +1800,15 @@ int gfx_get_max_mode(int *w, int *h, int o)
 	*w = 800;
 	*h = 480;
 #else
-	*w = 0;
-	*h = 0;
  #if SDL_VERSION_ATLEAST(2,0,0)
 	SDL_DisplayMode desktop_mode;
-  #if defined(ANDROID) || defined(IOS)
+  #if defined(ANDROID)
+	if (o == MODE_ANY) {
+		get_screen_size(w, h);
+		return 0;
+	}
+  #endif
+  #if defined(IOS)
 	if (o == MODE_ANY && current_gfx_w != -1) {
 		*w = current_gfx_w;
 		*h = current_gfx_h;
@@ -1824,6 +1834,9 @@ int gfx_get_max_mode(int *w, int *h, int o)
 		return 0;
 	}
  #endif
+	*w = 0;
+	*h = 0;
+
 	if (!vid_modes)
 		gfx_modes();
 
@@ -1841,6 +1854,8 @@ int gfx_get_max_mode(int *w, int *h, int o)
 		i ++;
 	}
 #endif
+	if (*w == 0 || *h == 0) /* no suitable mode */
+		return -1;
 	return 0;
 }
 
@@ -1973,6 +1988,17 @@ static int mouse_watcher(void *userdata, SDL_Event *event)
 	}
 	return 0;
 }
+
+void gfx_real_size(int *ww, int *hh)
+{
+	int w, h;
+	SDL_GetWindowSize(SDL_VideoWindow, &w, &h);
+	if (ww)
+		*ww = w;
+	if (hh)
+		*hh = h;
+}
+
 void gfx_finger_pos_scale(float x, float y, int *ox, int *oy, int norm)
 {
 	int xx = 0, yy = 0;
@@ -2140,7 +2166,11 @@ int gfx_set_mode(int w, int h, int fs)
 
 #if defined(IOS) || defined(ANDROID) || defined(WINRT) || defined(SAILFISHOS)
 	SDL_VideoWindow = SDL_CreateWindow(t, window_x, window_y, win_w, win_h,
-			SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_RESIZABLE);
+			SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_RESIZABLE
+#if defined(ANDROID)
+			| SDL_WINDOW_FULLSCREEN_DESKTOP
+#endif
+			);
 	if (!SDL_VideoWindow) {
 		fprintf(stderr, "Fallback to software window.\n");
 		SDL_VideoWindow = SDL_CreateWindow(t, window_x, window_y, win_w, win_h,
@@ -5599,10 +5629,6 @@ static Uint32 update(Uint32 interval, void *aux)
 {
 	if (!gfx_fading())
 		return 0;
-#ifdef __EMSCRIPTEN__
-	SDL_RemoveTimer(fade_timer);
-	fade_timer = SDL_AddTimer(60, update, NULL);
-#endif
 	if (gfx_change_nr > 0)
 		return interval;
 	gfx_change_nr ++;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2018 Peter Kosyh <p.kosyh at gmail.com>
+ * Copyright 2009-2019 Peter Kosyh <p.kosyh at gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation files
@@ -154,13 +154,14 @@ int game_reset(void)
 {
 	game_release(); /* commit all user events */
 	game_release_theme(1);
+	game_theme_free();
 	if (game_select(curgame_dir))
 		goto out;
 	if (game_apply_theme())
 		goto out;
 	return 0;
 out:
-	game_done(0);
+	game_done(1);
 	if (game_init(NULL)) {
 		game_error();
 		return -1;
@@ -391,6 +392,8 @@ static int cmp_game(const void *p1, const void *p2)
 
 static void games_sort()
 {
+	if (!games)
+		return;
 	qsort(games, games_nr, sizeof(struct game), cmp_game);
 }
 
@@ -943,12 +946,6 @@ int counter_fn(int interval, void *p)
 #endif
 	if (gfx_is_drawn_gifs() && !DIRECT_MODE)
 		push_user_event(anigif_do, NULL);
-#ifdef __EMSCRIPTEN__
-	if (timer_han) { /* emscripten SDL bug? */
-		gfx_del_timer(timer_han);
-		timer_han = gfx_add_timer(HZ, counter_fn, NULL);
-	}
-#endif
 	return interval;
 }
 
@@ -1094,6 +1091,9 @@ void game_release_theme(int force)
 	if (el_img(el_spic)) {
 		gfx_free_image(el_img(el_spic));
 		el_zero(el_spic);
+		if (GFX_MODE(game_theme.gfx_mode) == GFX_MODE_EMBEDDED)
+			txt_layout_add_img(txt_box_layout(el_box(el_scene)),
+				"scene", NULL);
 	}
 
 	for (i = 0; i < el_max; i++) {
@@ -1135,8 +1135,8 @@ static int game_event(const char *ev);
 
 void game_done(int err)
 {
-	game_event("quit");
-	if (curgame_dir && !err) {
+	if (!err && curgame_dir) {
+		game_event("quit");
 		if (opt_autosave)
 			game_save(0);
 		game_cfg_save();
@@ -1154,12 +1154,8 @@ void game_done(int err)
 	instead_done();
 	curgame_dir = NULL;
 
-/* #ifndef ANDROID
-	gfx_video_done();
-#endif */
 	game_own_theme = 0;
 	need_restart = 0;
-/*	SDL_Quit(); */
 }
 
 static void el_size(int i, int *w, int *h)
@@ -1840,6 +1836,7 @@ static void after_cmd(void)
 	game_autosave();
 	game_instead_restart();
 	game_instead_menu();
+	game_gfx_commit(0);
 }
 
 static void after_fading(void *aux)
@@ -1990,8 +1987,9 @@ int game_cmd(char *cmd, int flags)
 		fading = 1; /* one frame at least */
 
 	if (fading) { /* take old screen */
+		img_t offscreen;
 		game_cursor(CURSOR_CLEAR);
-		img_t offscreen = gfx_new(game_theme.w, game_theme.h);
+		offscreen = gfx_new(game_theme.w, game_theme.h);
 		if (!offscreen)
 			goto fatal;
 		oldscreen = gfx_screen(offscreen);
@@ -2036,9 +2034,8 @@ int game_cmd(char *cmd, int flags)
 			if (new_pict) {
 				gfx_free_image(el_img(el_spic));
 				el(el_spic)->p.p = NULL;
-				if (GFX_MODE(game_theme.gfx_mode) == GFX_MODE_EMBEDDED &&
-					!el(el_spic)->p.p) /* clear embedded gfx */
-				txt_layout_add_img(txt_box_layout(el_box(el_scene)),
+				if (GFX_MODE(game_theme.gfx_mode) == GFX_MODE_EMBEDDED) /* clear embedded gfx */
+					txt_layout_add_img(txt_box_layout(el_box(el_scene)),
 					"scene", NULL);
 			}
 		}
@@ -3153,9 +3150,15 @@ static int game_input(int down, const char *key, int x, int y, int mb)
 		const char *k;
 		args[0].val = "kbd"; args[0].type = INSTEAD_STR;
 		args[1].val = (down)?"true":"false"; args[1].type = INSTEAD_BOOL;
-		k = (key)?key:"unknown";
+		k = (key) ? key:"unknown";
 		args[2].val = (char*)k; args[2].type = INSTEAD_STR;
 		args[3].val = NULL;
+	} else if (mb == EV_CODE_TEXT) {
+		const char *k;
+		args[0].val = "text"; args[0].type = INSTEAD_STR;
+		k = (key) ? key:"";
+		args[1].val = (char*)k; args[1].type = INSTEAD_STR;
+		args[2].val = NULL;
 	} else {
 		const char *k;
 		int px = -1;
@@ -3203,7 +3206,8 @@ static int game_input(int down, const char *key, int x, int y, int mb)
 		return -1;
 	}
 
-	rc = game_cmd(p, (mb != -1)?GAME_CMD_CLICK:0); free(p);
+	rc = game_cmd(p, (mb >= 0 || mb == EV_CODE_FINGER)?GAME_CMD_CLICK:0);
+	free(p);
 
 	return (rc)?-1:0;
 }
@@ -3300,15 +3304,20 @@ static int game_input_events(struct inp_event *ev)
 	if (!curgame_dir)
 		return 0;
 	if (ev->type == KEY_DOWN || ev->type == KEY_UP) {
+#if defined(ANDROID) || defined(IOS)
+		if (!is_key(ev, "f12") && !menu_shown) /* f12 is keyboard toggle */
+			return 0;
+#endif
 		if (!game_input((ev->type == KEY_DOWN), ev->sym, -1, -1, EV_CODE_KBD))
 			return 1;
-	}
-	if (ev->type == FINGER_DOWN || ev->type == FINGER_UP) {
+	} else if (ev->type == FINGER_DOWN || ev->type == FINGER_UP) {
 		if (!game_input((ev->type == FINGER_DOWN), ev->sym, ev->x, ev->y, EV_CODE_FINGER))
 			return 1;
-	}
-	if (ev->type == MOUSE_DOWN || ev->type == MOUSE_UP) {
+	} else if (ev->type == MOUSE_DOWN || ev->type == MOUSE_UP) {
 		if (!game_input((ev->type == MOUSE_DOWN), "mouse", ev->x, ev->y, ev->code))
+			return 1;
+	} else if (ev->type == KEY_TEXT) {
+		if (!game_input(1, ev->sym, -1, -1, EV_CODE_TEXT))
 			return 1;
 	}
 	return 0;
@@ -3384,6 +3393,10 @@ static int kbd_instead(struct inp_event *ev, int *x, int *y)
 					game_load(9);
 			}
 		}
+#if defined(ANDROID) || defined(IOS)
+	} else if (!is_key(ev, "f12") && curgame_dir && !menu_shown) {
+		input_text(!(input_text(-1) > 0));
+#endif
 	} else if (!is_key(ev, "f5") && curgame_dir && !menu_shown) {
 		mouse_reset(1);
 		game_cmd("look", 0);
@@ -3611,6 +3624,17 @@ out:
 	return rc;
 }
 #ifdef __EMSCRIPTEN__
+const char *em_beforeunload(int eventType, const void *reserved, void *userData)
+{
+	if (curgame_dir) {
+		game_event("quit");
+		if (opt_autosave)
+			game_save(0);
+		game_cfg_save();
+	}
+	return NULL;
+}
+
 static void game_void_cycle(void)
 {
 	int rc;
@@ -3630,6 +3654,7 @@ static void game_void_cycle(void)
 int game_loop(void)
 {
 #ifdef __EMSCRIPTEN__
+	emscripten_set_beforeunload_callback(NULL, em_beforeunload);
 	emscripten_set_main_loop(game_void_cycle, 0, 0);
 	return -1;
 #else
